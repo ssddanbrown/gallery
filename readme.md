@@ -2,6 +2,8 @@
 
 This is a minimal PHP-based image gallery. It reads from a directory of WebP images, categorized by a single level of folders, and provides a simple gallery interface based upon your content.
 
+As an example, you can [find my instance here](https://danb.me/gallery/).
+
 ## Features
 
 This project is very simple by design, but it does have the following features:
@@ -24,6 +26,7 @@ This project requires PHP 8.1 or greater to use. The general steps to use the pr
   - Webserver should attempt to serve static files based on the path, but default back to the `public/index.php` file.
   - You may want to consider ensuring that image file caching is active and http2 (or greater) is in use for image load performance.
 3. Copy the `config.php.example` file to `config.php` and fill with your own details.
+4. Ensure the `public/thumbs` directory permissions allow write-access for the web-server.
 
 ## Usage
 

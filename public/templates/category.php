@@ -6,7 +6,7 @@
 ?>
 
 <header>
-    <a href="/">Back</a>
+    <a href="./">Back</a>
     <span>|</span>
     <h1>Category: <?php echo $category; ?></h1>
 </header>
