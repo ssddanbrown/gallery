@@ -1,10 +1,41 @@
 <?php
 
+// Global constants
 const IMAGES_DIR = __DIR__ . DIRECTORY_SEPARATOR . 'images';
 const THUMBS_DIR = __DIR__ . DIRECTORY_SEPARATOR . 'thumbs';
 
-$categories = getCategories();
-require "categories.php";
+// Path management
+$uri = $_SERVER['REQUEST_URI'];
+$routes = [
+    'categories' => function() {
+        sendPage("categories", [
+            'categories' => getCategories(),
+        ]);
+    },
+    'category' => function(string $category) {
+        sendPage("category", [
+            'category' => $category,
+            'images' => getCategoryImages($category),
+        ]);
+    },
+    '404' => function(string $uri) {
+        sendPage("404", [
+            'uri' => $uri,
+        ], 404);
+    }
+];
+
+if ($uri === '/') {
+    $routes['categories']();
+} else {
+    $category = urldecode(trim($uri, '/'));
+    if (categoryExists($category)) {
+        $routes['category']($category);
+    } else {
+        $routes['404']($uri);
+    }
+}
+
 
 /**
  * Get details of all available categories.
@@ -78,7 +109,16 @@ function generateImageThumbnail(string $category, string $image): void {
  */
 function getCategoryFolderNames(): array {
     $dirs = glob(buildPath(IMAGES_DIR, '*'), GLOB_ONLYDIR);
-    return array_map(fn(string $dir) => basename($dir), $dirs);
+    $dirNames = array_map(fn(string $dir) => basename($dir), $dirs);
+    return array_reverse($dirNames);
+}
+
+/**
+ * Check that a given category exists.
+ */
+function categoryExists(string $category): bool {
+    $expectedPath = buildPath(IMAGES_DIR, $category);
+    return is_dir($expectedPath);
 }
 
 /**
@@ -92,10 +132,48 @@ function getCategoryImageFiles(string $category): array {
 }
 
 /**
+ * Get the images within the given category.
+ * @return Image[]
+ */
+function getCategoryImages(string $category): array {
+    $files = getCategoryImageFiles($category);
+    $images = array_map(function(string $file) use ($category) {
+
+        $imagePath = buildPath('images', $category, $file);
+        [$width, $height] = getimagesize($imagePath);
+
+        return new Image(
+            name: $file,
+            width: $width,
+            height: $height,
+            uri: "./images/{$category}/{$file}",
+            thumb: "./thumbs/{$category}/{$file}"
+        );
+
+    }, $files);
+
+    foreach ($files as $fileName) {
+        generateImageThumbnail($category, $fileName);
+    }
+
+    return $images;
+}
+
+/**
  * Build a directory path from the given path parts.
  */
 function buildPath(...$parts): string {
     return implode(DIRECTORY_SEPARATOR, $parts);
+}
+
+/**
+ * Render and send the page of the given name to the user.
+ */
+function sendPage(string $name, array $data = [], int $status = 200): void {
+    extract($data);
+    include "templates/{$name}.php";
+    header('Content-Type: text/html; charset=utf-8');
+    http_response_code($status);
 }
 
 /**
@@ -122,5 +200,15 @@ class Category {
     public function __construct(
         public string $name,
         public string $thumb
+    ) {}
+}
+
+class Image {
+    public function __construct(
+        public string $name,
+        public int $width,
+        public int $height,
+        public string $uri,
+        public string $thumb,
     ) {}
 }
