@@ -1,4 +1,7 @@
 <?php
+declare(strict_types=1);
+//ini_set('display_errors', '1');
+//error_reporting(E_ALL);
 
 // Global constants
 const IMAGES_DIR = __DIR__ . DIRECTORY_SEPARATOR . 'images';
@@ -176,11 +179,12 @@ function sendPage(string $name, array $data = [], int $status = 200): void {
     global $config;
     $mergedData = array_merge($data, ['config' => $config]);
     extract($mergedData);
+
+    header('Content-Type: text/html; charset=utf-8');
+    http_response_code($status);
     include "templates/shared/header.php";
     include "templates/{$name}.php";
     include "templates/shared/footer.php";
-    header('Content-Type: text/html; charset=utf-8');
-    http_response_code($status);
 }
 
 /**
