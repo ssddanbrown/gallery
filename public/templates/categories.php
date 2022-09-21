@@ -1,9 +1,18 @@
-<h1>Categories</h1>
+<?php
+/**
+ * @var Category[] $categories
+ */
+?>
 
-<?php foreach ($categories as $category): ?>
+<div class="gallery-grid">
 
-<h3><?php echo $category->name; ?></h3>
-<a href="./<?php echo $category->name; ?>">View</a>
-<img src="<?php echo $category->thumb ?>" alt="">
+    <?php foreach ($categories as $category): ?>
 
-<?php endforeach; ?>
+        <a href="./<?php echo $category->name; ?>" class="gallery-item">
+            <img src="<?php echo $category->thumb ?>" alt="<?php echo $category->name; ?>" loading="lazy">
+            <h3><?php echo $category->name; ?></h3>
+        </a>
+
+    <?php endforeach; ?>
+
+</div>

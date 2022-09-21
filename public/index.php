@@ -4,6 +4,9 @@
 const IMAGES_DIR = __DIR__ . DIRECTORY_SEPARATOR . 'images';
 const THUMBS_DIR = __DIR__ . DIRECTORY_SEPARATOR . 'thumbs';
 
+// Load configuration
+$config = loadConfig();
+
 // Path management
 $uri = $_SERVER['REQUEST_URI'];
 $routes = [
@@ -170,10 +173,23 @@ function buildPath(...$parts): string {
  * Render and send the page of the given name to the user.
  */
 function sendPage(string $name, array $data = [], int $status = 200): void {
-    extract($data);
+    global $config;
+    $mergedData = array_merge($data, ['config' => $config]);
+    extract($mergedData);
+    include "templates/shared/header.php";
     include "templates/{$name}.php";
+    include "templates/shared/footer.php";
     header('Content-Type: text/html; charset=utf-8');
     http_response_code($status);
+}
+
+/**
+ * Load the config file from the parent directory.
+ */
+function loadConfig(): array {
+    $configPath = buildPath(dirname(__DIR__), 'config.php');
+    $config = include $configPath;
+    return $config;
 }
 
 /**

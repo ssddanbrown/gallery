@@ -5,19 +5,24 @@
  */
 ?>
 
-<?php include "shared/header.php" ?>
+<header>
+    <a href="/">Back</a>
+    <span>|</span>
+    <h1>Category: <?php echo $category; ?></h1>
+</header>
 
-<h1>Category: <?php echo $category; ?></h1>
+<div class="gallery-grid">
 
-<?php foreach ($images as $image): ?>
+    <?php foreach ($images as $image): ?>
 
-<h3>
-    <?php echo $image->name; ?>
-    <?php echo $image->width; ?>x<?php echo $image->height; ?>
-</h3>
-<a href="<?php echo $image->uri; ?>">View</a>
-<img src="<?php echo $image->thumb; ?>" alt="<?php echo $image->name; ?>">
+        <a href="<?php echo $image->uri; ?>" target="_blank" class="gallery-item">
+            <img src="<?php echo $image->thumb; ?>" alt="<?php echo $image->name; ?>" loading="lazy">
+            <h3>
+                <?php echo $image->name; ?>
+                <small>[<?php echo $image->width; ?>x<?php echo $image->height; ?>]</small>
+            </h3>
+        </a>
 
-<?php endforeach; ?>
+    <?php endforeach; ?>
 
-<?php include "shared/footer.php" ?>
+</div>

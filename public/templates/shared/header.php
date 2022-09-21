@@ -1,11 +1,12 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <base href="/">
+    <base href="<?php echo $config['base_url']; ?>">
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Gallery</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title><?php echo $config['title']; ?></title>
+
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>

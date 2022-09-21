@@ -1,0 +1,10 @@
+<?php
+
+return [
+    'base_url' => 'http://localhost:8080',
+    'title' => 'Danb Gallery',
+    'author_text' => 'Dan Brown',
+    'author_link' => 'https://danb.me',
+    'license_link' => 'https://creativecommons.org/publicdomain/zero/1.0/',
+    'license_text' => 'CC0 - Public Domain',
+];
